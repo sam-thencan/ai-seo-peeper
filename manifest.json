@@ -1,0 +1,36 @@
+{
+  "manifest_version": 3,
+  "name": "AI SEO Peeper",
+  "version": "1.0",
+  "description": "Reveals the hidden 'fan-out queries' ChatGPT uses to search the web.",
+  "permissions": [
+    "scripting"
+  ],
+  "host_permissions": [
+    "https://chatgpt.com/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "https://chatgpt.com/*"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "css": [
+        "styles.css"
+      ],
+      "run_at": "document_start"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "injected.js"
+      ],
+      "matches": [
+        "https://chatgpt.com/*"
+      ]
+    }
+  ]
+}
