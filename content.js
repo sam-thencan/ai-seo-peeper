@@ -1,10 +1,4 @@
-// 1. Inject the spy script
-const s = document.createElement('script');
-s.src = chrome.runtime.getURL('injected.js');
-s.onload = function() { this.remove(); };
-(document.head || document.documentElement).appendChild(s);
-
-// 2. Listen for messages from injected.js
+// 1. Listen for messages from injected.js (The Main World script)
 window.addEventListener("message", (event) => {
     if (event.source !== window) return;
 
@@ -16,7 +10,7 @@ window.addEventListener("message", (event) => {
     }
 });
 
-// 3. UI Logic
+// 2. UI Logic
 function createBaseUI() {
     const existing = document.getElementById('ai-seo-peeper-box');
     if (existing) return existing;
@@ -24,18 +18,18 @@ function createBaseUI() {
     const container = document.createElement('div');
     container.id = 'ai-seo-peeper-box';
     
-    // Notification Dot (visible only when minimized + new data)
+    // Notification Dot
     const dot = document.createElement('div');
     dot.className = 'peeper-notification-dot';
     container.appendChild(dot);
 
-    // Eye Icon (visible only when minimized)
+    // Eye Icon
     const eye = document.createElement('div');
     eye.className = 'peeper-eye-icon';
-    eye.innerText = '👀';
+    eye.textContent = '👀'; 
     container.appendChild(eye);
 
-    // Wrapper for Main Content (to fade in/out smoothly)
+    // Wrapper for Main Content
     const contentWrapper = document.createElement('div');
     contentWrapper.className = 'peeper-content-wrapper';
 
@@ -45,26 +39,26 @@ function createBaseUI() {
     
     const title = document.createElement('div');
     title.className = 'peeper-title';
-    title.innerHTML = 'AI SEO Peeper'; 
+    title.textContent = 'ChatGPT Search Peeper'; 
     
     const controls = document.createElement('div');
     controls.className = 'peeper-controls';
     
-    // Broom Icon (Clear)
+    // Broom Icon
     const clearIcon = document.createElement('span');
     clearIcon.className = 'peeper-icon-btn';
-    clearIcon.innerText = '🧹';
+    clearIcon.textContent = '🧹';
     clearIcon.title = "Clear List";
     clearIcon.onclick = (e) => {
         e.stopPropagation();
         const list = document.getElementById('ai-seo-peeper-list');
-        if(list) list.innerHTML = '';
+        if(list) list.textContent = '';
     };
 
-    // Close Icon (Minimize)
+    // Close Icon
     const closeBtn = document.createElement('span');
     closeBtn.className = 'peeper-icon-btn';
-    closeBtn.innerText = '×';
+    closeBtn.textContent = '×';
     closeBtn.style.fontSize = "20px";
     closeBtn.title = "Minimize";
     closeBtn.onclick = (e) => {
@@ -86,17 +80,19 @@ function createBaseUI() {
     btnContainer.className = 'peeper-btns';
 
     const copyBtn = document.createElement('button');
-    copyBtn.innerText = 'Copy All';
+    copyBtn.textContent = 'Copy All';
     copyBtn.onclick = (e) => {
         e.stopPropagation();
-        const items = Array.from(document.querySelectorAll('#ai-seo-peeper-list li')).map(li => li.innerText);
+        const items = Array.from(document.querySelectorAll('#ai-seo-peeper-list li')).map(li => li.textContent);
         if (items.length === 0) return;
         
         navigator.clipboard.writeText(items.join('\n'));
-        const originalText = copyBtn.innerText;
-        copyBtn.innerText = 'Copied!';
-        setTimeout(() => copyBtn.innerText = originalText, 2000);
+        const originalText = copyBtn.textContent;
+        copyBtn.textContent = 'Copied!';
+        setTimeout(() => copyBtn.textContent = originalText, 2000);
     };
+
+    // REMOVED PROMO LINK HERE
 
     btnContainer.appendChild(copyBtn);
 
@@ -108,7 +104,6 @@ function createBaseUI() {
     
     // --- Expand Logic ---
     container.onclick = (e) => {
-        // Only expand if currently minimized
         if (container.classList.contains('minimized')) {
             toggleMinimize(false);
         }
@@ -127,41 +122,36 @@ function toggleMinimize(shouldMinimize) {
         container.title = "Click to expand queries";
     } else {
         container.classList.remove('minimized');
-        container.classList.remove('has-new-data'); // Clear notification
+        container.classList.remove('has-new-data'); 
         container.title = "";
     }
 }
 
 function updatePeeperUI(newQueries) {
-    createBaseUI(); // Ensure UI exists
+    createBaseUI(); 
     
     const container = document.getElementById('ai-seo-peeper-box');
     const list = document.getElementById('ai-seo-peeper-list');
     
-    // Check if we are currently minimized
     const isMinimized = container.classList.contains('minimized');
 
-    const existingItems = new Set(Array.from(list.children).map(li => li.innerText));
+    const existingItems = new Set(Array.from(list.children).map(li => li.textContent));
     let addedAny = false;
 
     newQueries.forEach(q => {
         if (!existingItems.has(q)) {
             const item = document.createElement('li');
-            item.innerText = q;
+            item.textContent = q;
             item.style.animation = "highlight 1s ease";
             list.prepend(item);
             addedAny = true;
         }
     });
 
-    // Handle Minimized Notifications
     if (addedAny && isMinimized) {
-        // 1. Add visual badge
         container.classList.add('has-new-data');
-
-        // 2. Trigger Shake Animation
-        container.classList.remove('shaking'); // reset
-        void container.offsetWidth; // force reflow (magic trick to restart CSS animation)
+        container.classList.remove('shaking'); 
+        void container.offsetWidth; 
         container.classList.add('shaking');
     }
 }
