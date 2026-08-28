@@ -1,3 +1,9 @@
+> [!NOTE]
+> **This project has continued as [Prompt Research Buddy](https://chromewebstore.google.com/detail/chatgpt-search-peeper/efgihikieppeanalljlbojfkkknjjgoa)** — a larger, closed-source extension that automates full local AI-search (GEO) prompt research inside ChatGPT: it runs the research methodology, tests candidate prompts in fresh chats while capturing the fan-out queries, and exports a report plus a CSV of tracking prompts.
+>
+> This repository holds the final open-source version (ChatGPT Search Peeper 1.5) and is no longer maintained. The Chrome Web Store listing above now ships Prompt Research Buddy.
+> Privacy policy for the current extension: [PRIVACY.md](PRIVACY.md). Support: use this repo's [Issues](../../issues).
+
 # ChatGPT Search Peeper 👀
 
 **ChatGPT Search Peeper** is a lightweight Chrome Extension for SEOs, marketers, and content creators. It reveals the hidden "fan-out queries" that ChatGPT uses when it browses the web to answer a prompt.
